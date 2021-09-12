@@ -1,6 +1,7 @@
 import cv2
 import os
 import glob
+import scipy.io
 
 INPUTDIR = "D:\\ipad_data\\ply_0911\\png_datas"
 OUTPUTDIR = 'trimmed_images'
@@ -58,17 +59,20 @@ if not os.path.isdir(OUTPUTDIR):
     os.mkdir(OUTPUTDIR)
 
 # INPUTDIR内の全ての画像に対してループ
+imgsize_list = []
 for image in glob.glob(INPUTDIR + '/*.' + EXT):
     img, crop_img = crop(image)
 
     # 相対パスの部分を削除
     image = os.path.basename(image)
 
-    # # 切り取る長方形とともに元の画像を表示
-    # cv2.imshow(image, img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # 切り取る長方形とともに元の画像を表示
+    cv2.imshow(image, img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     # 切り取った画像を保存
     cv2.imwrite(OUTPUTDIR + '/' + image, crop_img) 
+    imgsize_list.append(crop_img.shape[:2])
 
+scipy.io.savemat("imgsize.mat", {"imgsize": imgsize_list})
