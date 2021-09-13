@@ -3,9 +3,12 @@ from tqdm import tqdm
 from typing import List, Dict, Any
 import json
 import glob
+import sys
 from pathlib import Path
 import numpy as np
 
+args = sys.argv
+jsondir_path = Path(args[1])
 
 OpenPoseMap = [
     "Nose",
@@ -77,8 +80,8 @@ def read_openpose_json(filename: str) -> List[Dict[str, Any]]:
 
 def get_all_openpose_json_files() -> List[str]:
     # ... implement your files loader here ...
-    p = Path("C:\\Users\\mitsuhiro\\Documents\\measure_sys\\json0911\\")
-    json_list = list(p.glob("*.json"))
+    # p = Path("C:\\Users\\mitsuhiro\\Documents\\measure_sys\\json0911\\")
+    json_list = list(jsondir_path.glob("*.json"))
     return json_list
 
 

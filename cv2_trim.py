@@ -1,16 +1,21 @@
 import cv2
 import os
-import glob
+from pathlib import Path
 import scipy.io
+import sys 
 
-INPUTDIR = "D:\\ipad_data\\ply_0911\\png_datas"
-OUTPUTDIR = 'trimmed_images'
+args = sys.argv
+PLYdir_path = Path(args[1])
+
+# INPUTDIR = "D:\\ipad_data\\ply_0911\\png_datas"
+INPUTDIR = Path(PLYdir_path, "png_datas")
+OUTPUTDIR = Path(".\\trimmed_images",INPUTDIR.parent.name)
 EXT = 'png'
 
 # 余白を削除する関数
 def crop(image): #引数は画像の相対パス
     # 画像の読み込み
-    img = cv2.imread(image)
+    img = cv2.imread(image.as_posix())
 
     # # 周りの部分は強制的にトリミング
     # h, w = img.shape[:2]
@@ -60,19 +65,20 @@ if not os.path.isdir(OUTPUTDIR):
 
 # INPUTDIR内の全ての画像に対してループ
 imgsize_list = []
-for image in glob.glob(INPUTDIR + '/*.' + EXT):
+for image in INPUTDIR.glob('*.' + EXT):
     img, crop_img = crop(image)
 
     # 相対パスの部分を削除
-    image = os.path.basename(image)
-
-    # 切り取る長方形とともに元の画像を表示
-    cv2.imshow(image, img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    image = image.stem
+    # # 切り取る長方形とともに元の画像を表示
+    # cv2.imshow(image, img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     # 切り取った画像を保存
-    cv2.imwrite(OUTPUTDIR + '/' + image, crop_img) 
+    mkfile = Path(OUTPUTDIR, image).with_suffix(".png")
+    print(mkfile)
+    cv2.imwrite(str(mkfile), crop_img) 
     imgsize_list.append(crop_img.shape[:2])
 
 scipy.io.savemat("imgsize.mat", {"imgsize": imgsize_list})
