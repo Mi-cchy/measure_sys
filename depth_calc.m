@@ -1,4 +1,4 @@
-function depth_calc(PLY_file_dir, output_name)
+function depth_calc(PLY_file_dir, outname)
 
     load('openpose_map.mat')
     load('poses.mat')
@@ -53,7 +53,7 @@ function depth_calc(PLY_file_dir, output_name)
     end
 
     cd(oldFolder)
-    out_name = "3Dposes_" + outputname + ".mat";
+    out_name = append("3Dposes_", outname, ".mat");
     save(out_name,'poses3d')
     toc
 end
