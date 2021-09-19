@@ -1,5 +1,12 @@
 # measure_sys
 
+## 使い方
+MATLABでexeall.mを実行
+1つ目のセクションでパラメータを設定
+- PLY_file_dir
+- save_name　（name_direction_height 例："inoue_s_70")
+- SIDE （矢状面計測の場合はtrue 前後からの場合はfalse）
+
 ## 処理の流れ
 1. iPadにより計測したplyファイルのディレクトリを指定
 2. make_XYpic.m により点群のXY平面への投影図をpng形式で保存
