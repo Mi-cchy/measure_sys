@@ -1,5 +1,5 @@
 load('openpose_map.mat')
-load('poses.mat')
+load('poses_inoue_s_70.mat')
 load('imgsize.mat')
 
 %{
@@ -15,32 +15,44 @@ load('imgsize.mat')
 ・3次元関節位置データとしてmatファイルに保存
 %}
 
-oldFolder = cd("D:\ipad_data\ply_0911");
-
-ptCloud = pcread('0000343.ply')
-ptCloud = pcdenoise(ptCloud)
+oldFolder = cd("D:\ipad_data\2021-09-18--12-18-31\PLY");
+i = 301
+side = 1
+ply_list = dir('*.ply');
+ptCloud = pcread(ply_list(i).name)
+ptCloud = pcdenoise(ptCloud);
 ptCloudSize = [ptCloud.XLimits ptCloud.YLimits ptCloud.ZLimits];
 Xlength = ptCloudSize(2)-ptCloudSize(1);
 Ylength = ptCloudSize(4)-ptCloudSize(3);
-for i = 1:25
-    i
-    x = poses{1, 344}.openpose_keypoints(i,1);
-    y = poses{1, 344}.openpose_keypoints(i,2);
 
-    X = ptCloudSize(1) + x/double(imgsize(344,2))*Xlength;
-    Y = ptCloudSize(4) - y/double(imgsize(344,1))*Ylength;
+for j = 1:25
+    j
+    if  poses{1, i}.openpose_keypoints(j,1) ~= 0
+        x = poses{1, i}.openpose_keypoints(j,1);
+        y = poses{1, i}.openpose_keypoints(j,2);
 
-    roi = [ X-0.01 X+0.01 Y-0.01 Y+0.01 -4 0 ];
-    indices = findPointsInROI(ptCloud,roi);
-    
-    if i == 1
-        ptCloudB = select(ptCloud,indices)
-    else
-        ptCloudC = select(ptCloud,indices)
-        ptCloudB = pccat([ptCloudB,ptCloudC])
-    end   
-    
+        if side == 0
+            X = ptCloudSize(1) + x/double(imgsize(i,2))*Xlength;
+            Y = ptCloudSize(4) - y/double(imgsize(i,1))*Ylength;
+        else
+            X = ptCloudSize(2) - y/double(imgsize(i,1))*Xlength
+            Y = ptCloudSize(4) - x/double(imgsize(i,2))*Ylength
+        end
+
+
+
+        roi = [ X-0.01 X+0.01 Y-0.01 Y+0.01 -4 0 ];
+        indices = findPointsInROI(ptCloud,roi);
+        if j == 1
+            ptCloudB = select(ptCloud,indices)
+        else
+            ptCloudC = select(ptCloud,indices);
+            ptCloudB = pccat([ptCloudB,ptCloudC])
+        end
+    end 
 end
+
+
 
 % RKnee = poses{1, 344}.openpose_keypoints(14,:)
 % x = RKnee(1)
@@ -62,8 +74,9 @@ hold on
 pcshow(ptCloudB.Location,'r');
 legend('Point Cloud','Points within ROI','Location','southoutside','Color',[1 1 1])
 hold off
-view(0,90)
-
+% view(0,90)
+% 矢状面測定時
+view(-90,90)
 cd(oldFolder) 
 
     

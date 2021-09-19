@@ -3,7 +3,7 @@
 % PLYファイルの読み込み（点群取得）
 list = dir('*.ply')
 disp(list(1))
-ptCloud = pcread('0001000.ply')
+ptCloud = pcread('0000000.ply')
 % pcloud.PreserveStructureOnRead = true;
 % pcdenoise:ノイズの除去　pcshow:点群のグラフ表示
 ptCloud = pcdenoise(ptCloud);

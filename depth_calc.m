@@ -1,8 +1,9 @@
-function depth_calc(PLY_file_dir, outname)
+function depth_calc(PLY_file_dir, save_name, side)
 
-    load('openpose_map.mat')
-    load('poses.mat')
+    posefile_name = 'poses_' +save_name + '.mat'
+    load(posefile_name)
     load('imgsize.mat')
+    load('openpose_map.mat')
 
     %{
     そのフレームに関節位置があるか調べる
@@ -25,7 +26,7 @@ function depth_calc(PLY_file_dir, outname)
         i
         if isempty(poses{1, i}.openpose_keypoints) == 0
            % 関節データが含まれるのでplyを読み込む
-            ptCloud = pcread(ply_list(i).name);
+            ptCloud = pcread(ply_list(i).name)
             ptCloud = pcdenoise(ptCloud);
             ptCloudSize = [ptCloud.XLimits ptCloud.YLimits ptCloud.ZLimits];
             Xlength = ptCloudSize(2)-ptCloudSize(1);
@@ -35,25 +36,36 @@ function depth_calc(PLY_file_dir, outname)
                 if  poses{1, i}.openpose_keypoints(j,1) ~= 0
                     x = poses{1, i}.openpose_keypoints(j,1);
                     y = poses{1, i}.openpose_keypoints(j,2);
+                    
+                    if side == 0
+                        X = ptCloudSize(1) + x/double(imgsize(i,2))*Xlength;
+                        Y = ptCloudSize(4) - y/double(imgsize(i,1))*Ylength;
+                    else
+                        X = ptCloudSize(2) - y/double(imgsize(i,1))*Xlength;
+                        Y = ptCloudSize(4) - x/double(imgsize(i,2))*Ylength;
+                    end
 
-                    X = ptCloudSize(1) + x/double(imgsize(i,2))*Xlength;
-                    Y = ptCloudSize(4) - y/double(imgsize(i,1))*Ylength;
+                   
 
                     roi = [ X-0.01 X+0.01 Y-0.01 Y+0.01 -4 0 ];
                     indices = findPointsInROI(ptCloud,roi);
-                    ptCloudB = select(ptCloud,indices);
+                    ptCloudB = select(ptCloud,indices)
                     % 対象領域のzの中央値をその点のz座標とする
 
                     poses3d(i).joint_position(j,1) = X;
                     poses3d(i).joint_position(j,2) = Y;
                     poses3d(i).joint_position(j,3) = median(ptCloudB.Location(:,3));
-               end
-           end
+                else
+                    poses3d(i).joint_position(j,1) = NaN;
+                    poses3d(i).joint_position(j,2) = NaN;
+                    poses3d(i).joint_position(j,3) = NaN;
+                end
+            end
         end
     end
 
     cd(oldFolder)
-    out_name = append("3Dposes_", outname, ".mat");
+    out_name = append("3Dposes_", save_name, ".mat");
     save(out_name,'poses3d')
     toc
 end
