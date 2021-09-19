@@ -5,11 +5,13 @@ import scipy.io
 import sys 
 
 args = sys.argv
+print(args)
 PLYdir_path = Path(args[1])
+save_name = args[2]
 
 # INPUTDIR = "D:\\ipad_data\\ply_0911\\png_datas"
 INPUTDIR = Path(PLYdir_path, "png_datas")
-OUTPUTDIR = Path(".\\trimmed_images",INPUTDIR.parent.name)
+OUTPUTDIR = Path(".\\trimmed_images",save_name)
 EXT = 'png'
 
 # 余白を削除する関数

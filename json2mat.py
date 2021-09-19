@@ -9,6 +9,7 @@ import numpy as np
 
 args = sys.argv
 jsondir_path = Path(args[1])
+save_name = args[2]
 
 OpenPoseMap = [
     "Nose",
@@ -92,4 +93,4 @@ for filename in tqdm(get_all_openpose_json_files()):
 
 # Save all at once
 scipy.io.savemat("openpose_map.mat", {"OpenPoseMap": OpenPoseMap})
-scipy.io.savemat("poses.mat", {"poses": poses})
+scipy.io.savemat("poses_" + save_name + ".mat", {"poses": poses})
