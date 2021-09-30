@@ -26,7 +26,7 @@ function plot3D(save_name, side)
             zlabel('z')
             campos([-1.0, 2, 3])
             camup([0 1 0])
-        else
+        elseif side == 1
             xlim([-1.0 1.5])
             ylim([-3.0 3.0])
             zlim([-4.5 0.5])
@@ -35,6 +35,16 @@ function plot3D(save_name, side)
             zlabel('z')
             campos([2.0, 4.0, 0.0])
             camup([1 0 0])
+        else 
+            xlim([-1.0 1.5])
+            ylim([-3.0 3.0])
+            zlim([-4.5 0.5])
+            xlabel('x')
+            ylabel('y')
+            zlabel('z')
+%             campos([0.0, 3.0, -2.5])
+%             camup([1 0 0])   
+            view([0 1 0])
         end
             
 %         view([0 0]) % [0 0]:xz平面（上から） [0 90]:xy平面（正面から）

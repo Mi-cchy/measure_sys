@@ -1,5 +1,5 @@
 load('openpose_map.mat')
-load('poses_inoue_s_70.mat')
+load('poses_inoue_f_40.mat')
 load('imgsize.mat')
 
 %{
@@ -15,9 +15,9 @@ load('imgsize.mat')
 ・3次元関節位置データとしてmatファイルに保存
 %}
 
-oldFolder = cd("D:\ipad_data\2021-09-18--12-18-31\PLY");
-i = 301
-side = 1
+oldFolder = cd("D:\ipad_data\2021-09-18--10-54-22\PLY");
+i = 200
+side = 0
 ply_list = dir('*.ply');
 ptCloud = pcread(ply_list(i).name)
 ptCloud = pcdenoise(ptCloud);
@@ -32,8 +32,10 @@ for j = 1:25
         y = poses{1, i}.openpose_keypoints(j,2);
 
         if side == 0
-            X = ptCloudSize(1) + x/double(imgsize(i,2))*Xlength;
-            Y = ptCloudSize(4) - y/double(imgsize(i,1))*Ylength;
+%             X = ptCloudSize(1) + x/double(imgsize(i,2))*Xlength;
+%             Y = ptCloudSize(4) - y/double(imgsize(i,1))*Ylength;
+            X = ptCloudSize(1) + x/double(684)*Xlength;
+            Y = ptCloudSize(4) - y/double(335)*Ylength;
         else
             X = ptCloudSize(2) - y/double(imgsize(i,1))*Xlength
             Y = ptCloudSize(4) - x/double(imgsize(i,2))*Ylength
@@ -74,9 +76,11 @@ hold on
 pcshow(ptCloudB.Location,'r');
 legend('Point Cloud','Points within ROI','Location','southoutside','Color',[1 1 1])
 hold off
-% view(0,90)
-% 矢状面測定時
-view(-90,90)
+campos([-1.0, 2, 3])
+camup([0 1 0])
+% % view(0,90)
+% % 矢状面測定時
+% view(-90,90)
 cd(oldFolder) 
 
     

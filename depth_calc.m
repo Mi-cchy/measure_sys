@@ -21,7 +21,6 @@ function depth_calc(PLY_file_dir, save_name, side)
     oldFolder = cd(PLY_file_dir)
     ply_list = dir('*.ply');
 
-    tic
     for i = 1:length(ply_list)
         i
         if isempty(poses{1, i}.openpose_keypoints) == 0
@@ -67,5 +66,4 @@ function depth_calc(PLY_file_dir, save_name, side)
     cd(oldFolder)
     out_name = append("3Dposes_", save_name, ".mat");
     save(out_name,'poses3d')
-    toc
 end

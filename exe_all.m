@@ -1,9 +1,10 @@
 clear;
+tic
 % ディレクトリを指定
-PLY_file_dir = "D:\ipad_data\2021-09-18--12-18-31\PLY"
-save_name = "inoue_s_70"
+PLY_file_dir = "D:\ipad_data\2021-09-28--15-06-12\PLY"
+save_name = "0928_2nd"
 % name_direction_height  f:front b:back s:side height:40
-SIDE = true % 矢状面測定のときはtrue
+SIDE = 0 % 矢状面測定（ipad横向き）のときはtrue
 
 %% pngファイルの作成
 make_XYpic(PLY_file_dir, SIDE)
@@ -33,3 +34,4 @@ depth_calc(PLY_file_dir, save_name, SIDE)
 
 %% アニメーションの作成
 plot3D(save_name, SIDE)
+toc
